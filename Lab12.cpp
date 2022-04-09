@@ -1,4 +1,4 @@
-﻿//Дан пофамильный список учителей школы, которые преподают математику, информатику,
+//Дан пофамильный список учителей школы, которые преподают математику, информатику,
 //физику, химию и биологию, с указанием их недельной нагрузки по каждому из предметов.
 //Вывести учителей, имеющих минимальную нагрузку среди преподающих один предмет, затем
 //среди преподающих два предмета и т.д.до пяти.
@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <numeric>
+#include <algorithm>
 
 using namespace std;
 
@@ -61,4 +62,21 @@ int main()
         }
         cout << endl;
     }*/
+
+    for (int i = 0; i < 5; i++)
+    {
+        vector<int>::iterator minimum_el;
+        minimum_el = min_element(sum_weekly_load[i].begin(), sum_weekly_load[i].end());
+        int minimum = static_cast<int>(*minimum_el);
+        for (int j = 0; j < number_teachers; j++)
+        {
+            if (teachers[j].subject.size() == (i + 1))
+            {
+                if (accumulate(teachers[j].weekly_load.begin(), teachers[i].weekly_load.end(), 0) == minimum)
+                {
+                    cout << i + 1 << "предмет: " << teachers[j].surname << endl;
+                }
+            }
+        }
+    }
 }
