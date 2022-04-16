@@ -7,16 +7,16 @@
 #include <Windows.h>
 #include <string>
 #include <vector>
-#include <numeric>
-#include <algorithm>
 
 using namespace std;
 
 struct teacher
 {
     string surname;
+    int number_subject = 0;
     vector <string> subject;
     vector <int> weekly_load;
+    int sum_load = 0;
 };
 
 int main()
@@ -34,49 +34,37 @@ int main()
     {
         cout << "Учитель " << i + 1 << endl;
         cout << "Введите фамилию: "; cin >> teachers[i].surname;
-        int number_subjects;
-        cout << "Введите количество предметов (максимально - 5): "; cin >> number_subjects;
-        teachers[i].subject.resize(number_subjects);
-        teachers[i].weekly_load.resize(number_subjects);
-        for (int j = 0; j < number_subjects; j++)
+        cout << "Введите количество предметов (максимально - 5): "; cin >> teachers[i].number_subject;
+        teachers[i].subject.resize(teachers[i].number_subject);
+        teachers[i].weekly_load.resize(teachers[i].number_subject);
+        for (int j = 0; j < teachers[i].number_subject; j++)
         {
             cout << "Введите " << j + 1 << " предмет и недельную нагрузку: ";
             cin >> teachers[i].subject[j] >> teachers[i].weekly_load[j];
+            teachers[i].sum_load += teachers[i].weekly_load[j];
         }
         cout << endl;
     }
 
-    vector<vector<int>> sum_weekly_load;
-    sum_weekly_load.resize(5);
+    int min_sum_load[5] = { INT_MAX, INT_MAX, INT_MAX, INT_MAX, INT_MAX };
     for (int i = 0; i < number_teachers; i++)
     {
-        int number_subjects = teachers[i].weekly_load.size();
-        sum_weekly_load[number_subjects - 1].push_back(accumulate(teachers[i].weekly_load.begin(), teachers[i].weekly_load.end(), 0));
-    }
-
-    /*for (int i = 0; i < sum_weekly_load.size(); i++)
-    {
-        for (int j = 0; j < sum_weekly_load[i].size(); j++)
+        if (teachers[i].sum_load < min_sum_load[teachers[i].number_subject - 1])
         {
-            cout << sum_weekly_load[i][j] << " ";
+            min_sum_load[teachers[i].number_subject - 1] = teachers[i].sum_load;
         }
-        cout << endl;
-    }*/
+    }
 
     for (int i = 0; i < 5; i++)
     {
-        vector<int>::iterator minimum_el;
-        minimum_el = min_element(sum_weekly_load[i].begin(), sum_weekly_load[i].end());
-        int minimum = static_cast<int>(*minimum_el);
+        cout << "Учителя с минимальной нагрузкой на " << i + 1 << " предмет(а/ов): " << endl;
         for (int j = 0; j < number_teachers; j++)
         {
-            if (teachers[j].subject.size() == (i + 1))
+            if ((teachers[j].sum_load == min_sum_load[i]) && (i == teachers[j].number_subject - 1))
             {
-                if (accumulate(teachers[j].weekly_load.begin(), teachers[i].weekly_load.end(), 0) == minimum)
-                {
-                    cout << i + 1 << "предмет: " << teachers[j].surname << endl;
-                }
+                cout << teachers[j].surname << endl;
             }
         }
+        cout << endl;
     }
 }
