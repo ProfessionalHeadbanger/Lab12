@@ -7,6 +7,7 @@
 #include <Windows.h>
 #include <string>
 #include <vector>
+#include <map>
 
 using namespace std;
 
@@ -14,8 +15,7 @@ struct teacher
 {
     string surname;
     int number_subject = 0;
-    vector <string> subject;
-    vector <int> weekly_load;
+    map <string, int> subjects;
     int sum_load = 0;
 };
 
@@ -35,13 +35,22 @@ int main()
         cout << "Учитель " << i + 1 << endl;
         cout << "Введите фамилию: "; cin >> teachers[i].surname;
         cout << "Введите количество предметов (максимально - 5): "; cin >> teachers[i].number_subject;
-        teachers[i].subject.resize(teachers[i].number_subject);
-        teachers[i].weekly_load.resize(teachers[i].number_subject);
         for (int j = 0; j < teachers[i].number_subject; j++)
         {
             cout << "Введите " << j + 1 << " предмет и недельную нагрузку: ";
-            cin >> teachers[i].subject[j] >> teachers[i].weekly_load[j];
-            teachers[i].sum_load += teachers[i].weekly_load[j];
+            string subject; cin >> subject;
+            int weekly_load; cin >> weekly_load;
+            teachers[i].subjects.insert(make_pair(subject, weekly_load));
+        }
+        cout << endl;
+    }
+
+    for (int i = 0; i < number_teachers; i++)
+    {
+        map <string, int> ::iterator it = teachers[i].subjects.begin();
+        for (; it != teachers[i].subjects.end(); it++)
+        {
+            teachers[i].sum_load += it->second;
         }
         cout << endl;
     }
